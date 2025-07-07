@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Kalpten Mektup</title>
+  <style>
+    body {
+      margin: 0;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background: linear-gradient(135deg, #4b2c4f, #ffafbd, #ffc3a0);
+      background-size: 200% 200%;
+      animation: pulseGradient 10s ease infinite;
+      user-select: none;
+    }
+
+    @keyframes pulseGradient {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .envelope-wrapper {
+      position: relative;
+      perspective: 1000px;
+    }
+
+    .envelope {
+      width: 300px;
+      height: 200px;
+      position: relative;
+      cursor: pointer;
+      transform-style: preserve-3d;
+    }
+
+    .back {
+      width: 100%;
+      height: 100%;
+      background: #d9534f;
+      border-radius: 15px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.3);
+      position: absolute;
+      top: 0;
+      left: 0;
+      z-index: 1;
+      transition: background 0.3s ease;
+    }
+
+    /* Flap: romantik yumuşak kapak */
+    .flap {
+      position: absolute;
+      top: 0;
+      left: 50%;
+      width: 280px;
+      height: 150px;
+      background: linear-gradient(135deg, #e85d75, #b63d3d);
+      border-radius: 140px 140px 50px 50px / 150px 150px 70px 70px;
+      box-shadow: 0 6px 25px rgba(182, 61, 61, 0.7);
+      transform-origin: bottom center;
+      transition: opacity 0.5s ease;
+      transform-style: preserve-3d;
+      transform: translateX(-50%);
+      z-index: 3;
+      cursor: pointer;
+    }
+
+    /* Kalp SVG kapsayıcı */
+    .heart {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      width: 120px;
+      height: 110px;
+      transform: translate(-50%, -50%) scale(0);
+      transition: transform 0.8s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+      z-index: 4;
+      pointer-events: none;
+      user-select: none;
+    }
+
+    .open .flap {
+      opacity: 0;
+    }
+
+    .open .heart {
+      transform: translate(-50%, -50%) scale(1);
+    }
+
+    .letter {
+      position: absolute;
+      top: 220px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-20px);
+      width: 320px;
+      background: #fffef8;
+      border-radius: 10px;
+      padding: 25px;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.2);
+      opacity: 0;
+      transition: opacity 1s ease, transform 1s ease;
+      font-size: 16px;
+      line-height: 1.7;
+      z-index: 0;
+      backdrop-filter: blur(4px);
+      user-select: text;
+    }
+
+    .open .letter {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+      z-index: 5;
+    }
+  </style>
+</head>
+<body>
+
+<div class="envelope-wrapper" id="wrapper" aria-label="Romantik zarf ve mektup">
+  <div class="envelope" role="button" tabindex="0" aria-pressed="false" aria-describedby="instruction">
+    <div class="back"></div>
+    <div class="flap"></div>
+
+    <!-- SVG kalp -->
+    <div class="heart" aria-hidden="true">
+      <svg viewBox="0 0 32 29.6" width="120" height="110" fill="url(#grad1)" xmlns="http://www.w3.org/2000/svg" aria-hidden="true" focusable="false">
+        <defs>
+          <linearGradient id="grad1" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" style="stop-color:#ff617e;stop-opacity:1" />
+            <stop offset="100%" style="stop-color:#d91e40;stop-opacity:1" />
+          </linearGradient>
+        </defs>
+        <path d="M23.6,0c-2.9,0-5.4,1.8-6.6,4.3C15.8,1.8,13.3,0,10.4,0C4.7,0,0,4.7,0,10.4
+          c0,7.2,10.3,13.6,16,19.2c5.7-5.6,16-12,16-19.2C32,4.7,27.3,0,23.6,0z"/>
+      </svg>
+    </div>
+
+  </div>
+  <div class="letter" id="instruction" aria-live="polite">
+    <p>
+      Sevgili Betül,<br><br>
+      Seni ne kadar çok üzdüğümü ve kırdığımı biliyorum. Bu yüzden kendime kızıyorum, gerçekten çok üzgünüm.<br><br>
+      Seni çok seviyorum. Ne olursa olsun, yanında olmaya, seni sevmekten asla vazgeçmeyeceğim.<br><br>
+      Güvenini yeniden kazanacağıma kalbimden inanıyorum. Bunu sadece sözlerle değil, davranışlarımla göstereceğim.<br><br>
+      Her şeyden çok seni seviyorum...<br><br>
+      köpeğin 3 Ğ ile
+    </p>
+  </div>
+</div>
+
+<script>
+  const wrapper = document.getElementById('wrapper');
+  const envelope = wrapper.querySelector('.envelope');
+
+  wrapper.addEventListener('click', () => {
+    wrapper.classList.toggle('open');
+    const isOpen = wrapper.classList.contains('open');
+    envelope.setAttribute('aria-pressed', isOpen);
+  });
+
+  envelope.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter' || e.key === ' ') {
+      e.preventDefault();
+      wrapper.classList.toggle('open');
+      const isOpen = wrapper.classList.contains('open');
+      envelope.setAttribute('aria-pressed', isOpen);
+    }
+  });
+</script>
+
+</body>
+</html>
